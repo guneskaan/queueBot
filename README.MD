@@ -13,7 +13,9 @@ Requires `Python 3.6+`.
 	```
     $ export SLACK_BOT_TOKEN='xoxb-XXXXXXXXXXXX-xxxxxxxxxxxx-XXXXXXXXXXXXXXXXXXXXXXXX'
     ```
-4) Run the app
+4) Go to `Your Apps` on `api.slack.com`, and select your application. Then go to `Interactive Components` and set the `Request Url` to your `IP Address`. This way `Slack` will be able to send `HTTP Post` request on any interactions with `queueBot`'s messages (e.g button clicks). <br> Learn more at [Creating interactive messages](https://api.slack.com/messaging/interactivity#components)
+
+5) Run the app
 	```
     $ python3 app.py
 	```
