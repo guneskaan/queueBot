@@ -3,7 +3,10 @@ import logging
 import slack
 import ssl as ssl_lib
 import certifi
+import queue
 from queue_tutorial import queueBot
+
+Q = queue.Queue(maxsize = 10)
 
 onboarding_tutorials_sent = {}
 
@@ -27,91 +30,12 @@ def start_onboarding(web_client: slack.WebClient, user_id: str, channel: str):
         onboarding_tutorials_sent[channel] = {}
     onboarding_tutorials_sent[channel][user_id] = queue
 
-# ================ Team Join Event =============== #
-# When the user first joins a team, the type of the event will be 'team_join'.
-# Here we'll link the onboarding_message callback to the 'team_join' event.
-@slack.RTMClient.run_on(event="team_join")
-def onboarding_message(**payload):
-    """Create and send an onboarding welcome message to new users. Save the
-    time stamp of this message so we can update this message in the future.
-    """
-    # Get the id of the Slack user associated with the incoming event
-    user_id = payload["data"]["user"]["id"]
-    # Get WebClient so you can communicate back to Slack.
-    web_client = payload["web_client"]
-
-    # Open a DM with the new user.
-    response = web_client.im_open(user=user_id)
-    channel = response["channel"]["id"]
-
-    # Post the onboarding message.
-    start_onboarding(web_client, user_id, channel)
-
-
-# ============= Reaction Added Events ============= #
-# When a users adds an emoji reaction to the onboarding message,
-# the type of the event will be 'reaction_added'.
-# Here we'll link the update_emoji callback to the 'reaction_added' event.
-@slack.RTMClient.run_on(event="reaction_added")
-def update_emoji(**payload):
-    """Update onboarding welcome message after receiving a "reaction_added"
-    event from Slack. Update timestamp for welcome message as well.
-    """
-    data = payload["data"]
-    web_client = payload["web_client"]
-    channel_id = data["item"]["channel"]
-    user_id = data["user"]
-
-    # Get the original tutorial sent.
-    queue_tutorial = onboarding_tutorials_sent[channel_id][user_id]
-
-    # Mark the reaction task as completed.
-    queue_tutorial.reaction_task_completed = True
-
-    # Get the new message payload
-    message = queue_tutorial.get_message_payload()
-
-    # Post the updated message in Slack
-    updated_message = web_client.chat_update(**message)
-
-    # Update the timestamp saved on the onboarding tutorial object
-    queue_tutorial.timestamp = updated_message["ts"]
-
-
-# =============== Pin Added Events ================ #
-# When a users pins a message the type of the event will be 'pin_added'.
-# Here we'll link the update_pin callback to the 'reaction_added' event.
-@slack.RTMClient.run_on(event="pin_added")
-def update_pin(**payload):
-    """Update onboarding welcome message after receiving a "pin_added"
-    event from Slack. Update timestamp for welcome message as well.
-    """
-    data = payload["data"]
-    web_client = payload["web_client"]
-    channel_id = data["channel_id"]
-    user_id = data["user"]
-
-    # Get the original tutorial sent.
-    queue_tutorial = onboarding_tutorials_sent[channel_id][user_id]
-
-    # Mark the pin task as completed.
-    queue_tutorial.pin_task_completed = True
-
-    # Get the new message payload
-    message = queue_tutorial.get_message_payload()
-
-    # Post the updated message in Slack
-    updated_message = web_client.chat_update(**message)
-
-    # Update the timestamp saved on the onboarding tutorial object
-    queue_tutorial.timestamp = updated_message["ts"]
-
-
 # ============== Message Events ============= #
 # When a user sends a DM, the event type will be 'message'.
 # Here we'll link the update_share callback to the 'message' event.
 @slack.RTMClient.run_on(event="message")
 def message(**payload):
+    print(payload);
     """Display the onboarding welcome message after receiving a message
     that contains "start".
     """
