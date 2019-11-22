@@ -1,11 +1,16 @@
+# TODO: Only import necessary methods
 import os
-import logging
 import slack
 import ssl as ssl_lib
 import certifi
 import queue
-from queue_tutorial import queueBot
+import socketserver
+import logging
+from queueBot import queueBot
+from server import startServer
+from threading import Thread
 
+# TODO: Implement Queue
 Q = queue.Queue(maxsize = 10)
 
 onboarding_tutorials_sent = {}
@@ -33,9 +38,10 @@ def start_onboarding(web_client: slack.WebClient, user_id: str, channel: str):
 # ============== Message Events ============= #
 # When a user sends a DM, the event type will be 'message'.
 # Here we'll link the update_share callback to the 'message' event.
+
 @slack.RTMClient.run_on(event="message")
 def message(**payload):
-    print(payload);
+    logging.info("Message payload Received,\nPayload: %s\n", str(payload))
     """Display the onboarding welcome message after receiving a message
     that contains "start".
     """
@@ -52,4 +58,9 @@ if __name__ == "__main__":
     ssl_context = ssl_lib.create_default_context(cafile=certifi.where())
     slack_token = os.environ["SLACK_BOT_TOKEN"]
     rtm_client = slack.RTMClient(token=slack_token, ssl=ssl_context)
+
+    # Start HTTP Server on a New Thread
+    Thread(target = startServer, daemon = True).start()
+
+    # Start Slack RTM Client
     rtm_client.start()
