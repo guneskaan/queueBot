@@ -27,7 +27,7 @@ class Handler(BaseHTTPRequestHandler):
         # TODO: Handle Button Click
         self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 
-def startServer(server_class=HTTPServer, handler_class=Handler, port=80):
+def start_server(server_class=HTTPServer, handler_class=Handler, port=80):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     logging.info('Starting httpd...\n')

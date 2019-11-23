@@ -7,8 +7,8 @@ import sys
 import queue
 import socketserver
 import logging
-from queueBot import queueBot
-from server import startServer
+from queue_bot import QueueBot
+from server import start_server
 from threading import Thread
 
 # TODO: Implement Queue
@@ -56,22 +56,22 @@ def message(**payload):
         return start_onboarding(web_client, user_id, channel_id)
 
 if __name__ == "__main__":
-    slackToken = None
+    slack_token = None
     
     try:
-        with open(".SLACK_BOT_TOKEN") as tokenFile:
-                for line in tokenFile:
+        with open(".SLACK_BOT_TOKEN") as token_file:
+                for line in token_file:
                     key, value = line.replace(" ","").partition("=")[::2]
-                    slackToken = value
+                    slack_token = value
     except:
         sys.exit(" SLACK_BOT_TOKEN not found. \
         \n Please create a '.SLACK_BOT_TOKEN' file and set first line to 'var = <SLACK_BOT_TOKEN>'")
     
     ssl_context = ssl_lib.create_default_context(cafile=certifi.where())
-    rtm_client = slack.RTMClient(token=slackToken, ssl=ssl_context)
+    rtm_client = slack.RTMClient(token=slack_token, ssl=ssl_context)
 
     # Start HTTP Server on a New Thread
-    Thread(target = startServer, daemon = True).start()
+    Thread(target = start_server, daemon = True).start()
 
     # Start Slack RTM Client
     rtm_client.start()
