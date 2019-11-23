@@ -126,3 +126,9 @@ dmypy.json
 
 #keys
 *.pem
+
+# SLACK_BOT_TOKEN
+.SLACK_BOT_TOKEN
+
+# vscode
+.vscode

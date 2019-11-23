@@ -3,6 +3,7 @@ import os
 import slack
 import ssl as ssl_lib
 import certifi
+import sys
 import queue
 import socketserver
 import logging
@@ -55,9 +56,19 @@ def message(**payload):
         return start_onboarding(web_client, user_id, channel_id)
 
 if __name__ == "__main__":
+    slackToken = None
+    
+    try:
+        with open(".SLACK_BOT_TOKEN") as tokenFile:
+                for line in tokenFile:
+                    key, value = line.replace(" ","").partition("=")[::2]
+                    slackToken = value
+    except:
+        sys.exit(" SLACK_BOT_TOKEN not found. \
+        \n Please create a '.SLACK_BOT_TOKEN' file and set first line to 'var = <SLACK_BOT_TOKEN>'")
+    
     ssl_context = ssl_lib.create_default_context(cafile=certifi.where())
-    slack_token = os.environ["SLACK_BOT_TOKEN"]
-    rtm_client = slack.RTMClient(token=slack_token, ssl=ssl_context)
+    rtm_client = slack.RTMClient(token=slackToken, ssl=ssl_context)
 
     # Start HTTP Server on a New Thread
     Thread(target = startServer, daemon = True).start()
