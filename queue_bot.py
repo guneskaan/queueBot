@@ -27,8 +27,6 @@ class QueueBot:
         self.username = "queueBot"
         self.icon_emoji = ":robot_face:"
         self.timestamp = ""
-        self.reaction_task_completed = False
-        self.pin_task_completed = False
 
     def get_message_payload(self):
         return {

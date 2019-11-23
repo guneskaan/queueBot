@@ -14,8 +14,6 @@ from threading import Thread
 # TODO: Implement Queue
 Q = queue.Queue(maxsize = 10)
 
-onboarding_tutorials_sent = {}
-
 def start_onboarding(web_client: slack.WebClient, user_id: str, channel: str):
     # Create a new onboarding tutorial.
     queue = QueueBot(channel)
@@ -30,11 +28,6 @@ def start_onboarding(web_client: slack.WebClient, user_id: str, channel: str):
     # we can use it to update the message after a user
     # has completed an onboarding task.
     queue.timestamp = response["ts"]
-
-    # Store the message sent in onboarding_tutorials_sent
-    if channel not in onboarding_tutorials_sent:
-        onboarding_tutorials_sent[channel] = {}
-    onboarding_tutorials_sent[channel][user_id] = queue
 
 # ============== Message Events ============= #
 # When a user sends a DM, the event type will be 'message'.
@@ -62,11 +55,11 @@ if __name__ == "__main__":
         with open(".SLACK_BOT_TOKEN") as token_file:
                 for line in token_file:
                     key, value = line.replace(" ","").partition("=")[::2]
-                    slack_token = value
+                    slack_token = str(value).strip()
     except:
         sys.exit(" SLACK_BOT_TOKEN not found. \
         \n Please create a '.SLACK_BOT_TOKEN' file and set first line to 'SLACK_BOT_TOKEN = <SLACK_BOT_TOKEN>'")
-    
+
     ssl_context = ssl_lib.create_default_context(cafile=certifi.where())
     rtm_client = slack.RTMClient(token=slack_token, ssl=ssl_context)
 
