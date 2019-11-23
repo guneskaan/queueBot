@@ -18,7 +18,7 @@ onboarding_tutorials_sent = {}
 
 def start_onboarding(web_client: slack.WebClient, user_id: str, channel: str):
     # Create a new onboarding tutorial.
-    queue = queueBot(channel)
+    queue = QueueBot(channel)
 
     # Get the onboarding message payload
     message = queue.get_message_payload()
@@ -65,7 +65,7 @@ if __name__ == "__main__":
                     slack_token = value
     except:
         sys.exit(" SLACK_BOT_TOKEN not found. \
-        \n Please create a '.SLACK_BOT_TOKEN' file and set first line to 'var = <SLACK_BOT_TOKEN>'")
+        \n Please create a '.SLACK_BOT_TOKEN' file and set first line to 'SLACK_BOT_TOKEN = <SLACK_BOT_TOKEN>'")
     
     ssl_context = ssl_lib.create_default_context(cafile=certifi.where())
     rtm_client = slack.RTMClient(token=slack_token, ssl=ssl_context)
