@@ -9,11 +9,13 @@ Requires `Python 3.6+`.
 	```
 	pip3 install -r requirements.txt
 	```
-3) Set your `SLACK_BOT_TOKEN` environment variable to your `Bot User OAuth Access Token` found on your application's `api.slack.com` page.
+3) Create a `.SLACK_BOT_TOKEN` file in the main directory and initialize `SLACK_BOT_TOKEN` on the first line to your `Bot User OAuth Access Token`:
 	```
-    $ export SLACK_BOT_TOKEN='xoxb-XXXXXXXXXXXX-xxxxxxxxxxxx-XXXXXXXXXXXXXXXXXXXXXXXX'
+    SLACK_BOT_TOKEN = 'xoxb-XXXXXXXXXXXX-xxxxxxxxxxxx-XXXXXXXXXXXXXXXXXXXXXXXX'
     ```
-4) Go to `Your Apps` on `api.slack.com`, and select your application. Then go to `Interactive Components` and set the `Request Url` to your `IP Address`. This way `Slack` will be able to send `HTTP Post` request on any interactions with `queueBot`'s messages (e.g button clicks). <br> Learn more at [Creating interactive messages](https://api.slack.com/messaging/interactivity#components)
+	`Bot User OAuth Access Token` can be found on your application's `api.slack.com` page.
+
+4) Go to `Your Apps` on `api.slack.com`, and select your application. Then go to `Interactive Components` and set the `Request Url` to your router's `IP Address`. <br><br> This way `Slack` will be able to send `HTTP Post` request on any interactions with `queueBot`'s messages (e.g button clicks).<br><br>NOTE: You might have to configure your router's settings to allow `HTTP` [port forwarding](https://whatismyipaddress.com/port-forwarding)<br><br> Learn more at [Creating interactive messages](https://api.slack.com/messaging/interactivity#components)
 
 5) Run the app
 	```
