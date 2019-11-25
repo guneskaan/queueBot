@@ -25,9 +25,9 @@ class Handler(BaseHTTPRequestHandler):
                 str(self.path), str(self.headers), post_data)
 
         # TODO: This codepath should only run for Slack interactive payloads
-        key, payload = payload.partition("=")[::2]
+        key, payload = post_data.partition("=")[::2]
         payload_json = json.loads(payload)
-        
+
         # TODO: Handle Button Click
         print(payload_json)
 
