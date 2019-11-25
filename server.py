@@ -22,8 +22,7 @@ class Handler(BaseHTTPRequestHandler):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length).decode('utf-8') # <--- Gets the data itself
         logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
-                str(self.path), str(self.headers), post_data)
-                str(self.path), str(self.headers), post_data)
+            str(self.path), str(self.headers), post_data)
 
         # TODO: This codepath should only run for Slack interactive payloads
         key, payload = post_data.partition("=")[::2]
