@@ -4,15 +4,11 @@ import slack
 import ssl as ssl_lib
 import certifi
 import sys
-import queue
 import socketserver
 import logging
 from queue_bot import QueueBot
 from server import start_server
 from threading import Thread
-
-# TODO: Implement Queue
-Q = queue.Queue(maxsize = 10)
 
 def start_onboarding(web_client: slack.WebClient, user_id: str, channel: str):
     # Create a new onboarding tutorial.

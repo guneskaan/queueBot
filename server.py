@@ -29,7 +29,7 @@ class Handler(BaseHTTPRequestHandler):
         payload_json = json.loads(unquote(payload)) # Replace escaped characters and parse JSON object
 
         # TODO: Handle Button Click
-        print(payload_json)
+        print(payload_json.user.name)
 
         self._set_response()
         self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
