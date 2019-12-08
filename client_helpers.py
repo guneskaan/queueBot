@@ -13,7 +13,6 @@ except:
     
 def fetchImageUrlForUserId(user_id):
     client = WebClient(token=oauth_access_token)
-    response = client.users_profile_get(user = user["id"])
+    response = client.users_profile_get(user = user_id)
 
     return unquote(response["profile"]["image_24"])
-

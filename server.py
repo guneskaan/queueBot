@@ -30,7 +30,7 @@ class Handler(BaseHTTPRequestHandler):
         payload_json = json.loads(unquote(payload)) # Replace escaped characters and parse JSON object
 
         # TODO: Handle Button Click
-        insert_queueBot(payload_json["container"]["channel_id"], payload_json["user"]["name"])
+        insert_queueBot(payload_json["container"]["channel_id"], payload_json["user"])
 
         self._set_response()
         self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
