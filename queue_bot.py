@@ -1,7 +1,8 @@
-class QueueBot:
-    """Constructs the onboarding message and stores the state of which tasks were completed."""
+from queue import Queue
+from collections import deque
 
-    WELCOME_BLOCK = {
+class QueueBot:
+    LINE_BLOCK = {
         "type": "section",
         "text": {
             "type": "mrkdwn",
@@ -20,13 +21,13 @@ class QueueBot:
                         "value": "view_alternate_2"
                     }
     }
-    DIVIDER_BLOCK = {"type": "divider"}
 
     def __init__(self, channel):
         self.channel = channel
         self.username = "queueBot"
         self.icon_emoji = ":robot_face:"
         self.timestamp = ""
+        self.Q = deque()
 
     def get_message_payload(self):
         return {
@@ -35,19 +36,34 @@ class QueueBot:
             "username": self.username,
             "icon_emoji": self.icon_emoji,
             "blocks": [
-                self.WELCOME_BLOCK
+                self.LINE_BLOCK,
+                self._get_queue_block()
             ],
         }
 
-    @staticmethod
-    def _get_checkmark(task_completed: bool) -> str:
-        if task_completed:
-            return ":white_check_mark:"
-        return ":white_large_square:"
+    def _get_queue_block(self):
+        elements = list(map(usernameToBlockKitElement, self.Q))
 
-    @staticmethod
-    def _get_task_block(text, information):
-        return [
-            {"type": "section", "text": {"type": "mrkdwn", "text": text}},
-            {"type": "context", "elements": [{"type": "mrkdwn", "text": information}]},
-        ]
+        if not elements:
+            return {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "There is no one in this queue yet! Click the \"Line Up\" button to be the first in the line!"
+                }
+            }
+
+        return {
+            "type": "context",
+            "elements": elements
+        }
+
+    def insert_queue(self, username):
+        if username not in self.Q:
+            self.Q.append(username)
+
+def usernameToBlockKitElement(username):
+    return {
+        "type": "plain_text",
+        "text": username
+    }

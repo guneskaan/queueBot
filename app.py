@@ -6,24 +6,9 @@ import certifi
 import sys
 import socketserver
 import logging
-from queue_bot import QueueBot
+from queues import start_queueBot
 from server import start_server
 from threading import Thread
-
-def start_onboarding(web_client: slack.WebClient, user_id: str, channel: str):
-    # Create a new onboarding tutorial.
-    queue = QueueBot(channel)
-
-    # Get the onboarding message payload
-    message = queue.get_message_payload()
-
-    # Post the onboarding message in Slack
-    response = web_client.chat_postMessage(**message)
-
-    # Capture the timestamp of the message we've just posted so
-    # we can use it to update the message after a user
-    # has completed an onboarding task.
-    queue.timestamp = response["ts"]
 
 # ============== Message Events ============= #
 # When a user sends a DM, the event type will be 'message'.
@@ -42,7 +27,7 @@ def message(**payload):
     text = data.get("text")
 
     if text and text.lower() == "start":
-        return start_onboarding(web_client, user_id, channel_id)
+        return start_queueBot(web_client, user_id, channel_id)
 
 if __name__ == "__main__":
     slack_token = None
