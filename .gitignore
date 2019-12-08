@@ -130,5 +130,8 @@ dmypy.json
 # SLACK_BOT_TOKEN
 .SLACK_BOT_TOKEN
 
+# OAUTH_ACCESS_TOKEN
+.OAUTH_ACCESS_TOKEN
+
 # vscode
 .vscode
