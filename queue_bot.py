@@ -1,5 +1,9 @@
 from queue import Queue
 from collections import deque
+import logging
+
+# Change logger setting to display INFO type messages
+logging.getLogger().setLevel(logging.INFO)
 
 class QueueBot:
     LINE_BLOCK = {
@@ -28,6 +32,7 @@ class QueueBot:
         self.icon_emoji = ":robot_face:"
         self.timestamp = ""
         self.Q = deque()
+        self.web_client = {}
 
     def get_message_payload(self):
         return {
@@ -59,8 +64,13 @@ class QueueBot:
         }
 
     def insert_queue(self, username):
-        if username not in self.Q:
-            self.Q.append(username)
+        # TODO: Send appropriate error message if user is already in the queue
+        if username in self.Q:
+            logging.info('Error: User is already in the queue.')
+            return
+
+        self.Q.append(username)
+        
 
 def usernameToBlockKitElement(username):
     return {
