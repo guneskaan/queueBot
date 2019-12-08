@@ -28,13 +28,13 @@ def start_queueBot(web_client: WebClient, user_id: str, channel: str):
     #     active_queues[channel] = {}
     active_queues[channel] = queueBot
 
-def insert_queueBot(channel: str, username: str):
+def insert_queueBot(channel, user):
     if channel not in active_queues:
         return
     
     # Find the right active queue and insert new user
     queue = active_queues[channel]
-    queue.insert_queue(username)
+    queue.insert_queue(user)
 
     # Get the updated queueBot message payload
     message = queue.get_message_payload()

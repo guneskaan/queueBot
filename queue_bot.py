@@ -47,7 +47,7 @@ class QueueBot:
         }
 
     def _get_queue_block(self):
-        elements = list(map(usernameToBlockKitElement, self.Q))
+        elements = list(map(userToBlockKitElement, self.Q))
 
         if not elements:
             return {
@@ -60,20 +60,30 @@ class QueueBot:
 
         return {
             "type": "context",
-            "elements": elements
+            "elements": elements.insert(0, {
+                "type": "mrkdwn",
+                "text": ":one: : "
+            })
         }
 
-    def insert_queue(self, username):
+    def insert_queue(self, user):
         # TODO: Send appropriate error message if user is already in the queue
-        if username in self.Q:
+        if user in self.Q:
             logging.info('Error: User is already in the queue.')
             return
 
-        self.Q.append(username)
+        self.Q.append(user)
         
 
-def usernameToBlockKitElement(username):
+def userToBlockKitElement(user):
+    print("user is")
+    print(user)
+    print("user id is")
+    print(user["id"])
+    retrieved = self.web_client.users_profile_get(user = user["id"])
+    print(retrieved)
     return {
-        "type": "plain_text",
-        "text": username
+        "type": "image",
+        "image_url": retrieved["image_24"],
+        "alt_text": user["name"]
     }
