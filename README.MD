@@ -15,9 +15,17 @@ Requires `Python 3.6+`.
     ```
 	`Bot User OAuth Access Token` can be found on your application's `api.slack.com` page.
 
-4) Go to `Your Apps` on `api.slack.com`, and select your application. Then go to `Interactive Components` and set the `Request Url` to your router's `IP Address`. <br><br> This way `Slack` will be able to send `HTTP Post` request on any interactions with `queueBot`'s messages (e.g button clicks).<br><br>NOTE: You might have to configure your router's settings to allow `HTTP` [port forwarding](https://whatismyipaddress.com/port-forwarding)<br><br> Learn more at [Creating interactive messages](https://api.slack.com/messaging/interactivity#components)
+4) Similarly, create a `.OAUTH_ACCESS_TOKEN` file and initialize `OAUTH_ACCESS_TOKEN`:
+	```
+    OAUTH_ACCESS_TOKEN = 'xoxb-XXXXXXXXXXXX-xxxxxxxxxxxx-XXXXXXXXXXXX-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+    ```
+	`OAuth Access Token` can be found on your application's `api.slack.com` page.
 
-5) Run the app
+5) Go to `Your Apps` on `api.slack.com`, and select your application. Then go to `Interactive Components` and set the `Request Url` to your router's `IP Address`. <br><br> This way `Slack` will be able to send `HTTP Post` request on any interactions with `queueBot`'s messages (e.g button clicks).<br><br>NOTE: You might have to configure your router's settings to allow `HTTP` [port forwarding](https://whatismyipaddress.com/port-forwarding)<br><br> Learn more at [Creating interactive messages](https://api.slack.com/messaging/interactivity#components)
+
+6) To be able to retreive profile pictures of users and display them in the queue, queueBot requires additional access scopes. In your applications page, go to `OAuth & Permissions` tab. Scroll down to the `Scopes` section, and click on `Add an OAuth Scope`. From the dropdown, find `users.profile:read` and add it to the list of scopes. A warning will appear on the page to reinstall the application in your organization.
+
+7) Run the app
 	```
     $ python3 app.py
 	```

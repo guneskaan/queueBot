@@ -1,6 +1,9 @@
 from queue import Queue
 from collections import deque
 import logging
+import slack
+from urllib.parse import unquote
+from client_helpers import fetchImageUrlForUserId
 
 # Change logger setting to display INFO type messages
 logging.getLogger().setLevel(logging.INFO)
@@ -58,12 +61,15 @@ class QueueBot:
                 }
             }
 
-        return {
-            "type": "context",
-            "elements": elements.insert(0, {
+        #TODO: Think of a better way to show the start of the queue
+        elements.insert(0, {
                 "type": "mrkdwn",
                 "text": ":one: : "
             })
+    
+        return {
+            "type": "context",
+            "elements": elements
         }
 
     def insert_queue(self, user):
@@ -76,14 +82,10 @@ class QueueBot:
         
 
 def userToBlockKitElement(user):
-    print("user is")
-    print(user)
-    print("user id is")
-    print(user["id"])
-    retrieved = self.web_client.users_profile_get(user = user["id"])
-    print(retrieved)
+    image_url = fetchImageUrlForUserId(user["id"])
+
     return {
         "type": "image",
-        "image_url": retrieved["image_24"],
+        "image_url": image_url,
         "alt_text": user["name"]
     }
