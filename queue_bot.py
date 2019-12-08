@@ -2,7 +2,6 @@ from queue import Queue
 from collections import deque
 import logging
 import slack
-from urllib.parse import unquote
 from client_helpers import fetchImageUrlForUserId
 
 # Change logger setting to display INFO type messages
