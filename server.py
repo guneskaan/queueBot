@@ -27,6 +27,7 @@ class Handler(BaseHTTPRequestHandler):
         
         if self.path == '/command':
             self.do_command(post_data)
+            return
 
         # TODO: This codepath should only run for Slack interactive payloads.
         elif self.path == '/':
@@ -42,7 +43,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_command(self, post_data):
         pairs = post_data.split('&')
         pairsDict = dict(pair.split('=') for pair in pairs)
-        start_queueBot(pairsDict["channel_id"])
+        start_queueBot(self, pairsDict["channel_id"], pairsDict["text"])
 
 def start_server(server_class=HTTPServer, handler_class=Handler, port=80):
     server_address = ('', port)

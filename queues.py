@@ -22,12 +22,25 @@ except:
 # active_queues = {"channel": queueBot}
 active_queues = {}
 
-def start_queueBot(channel: str):
+def start_queueBot(req, channel, text):
+    command_type, name = text.split("+")[::2]
+
+    if command_type not in ['start', 'stop']:
+        req._set_response()
+        req.wfile.write("Invalid command parameters.".encode('utf-8'))
+    elif command_type == 'stop':
+        if channel in active_queues:
+            web_client.chat_delete(channel=channel, timestamp=maybe_channel.timestamp)
+            active_queues[channel] = None
+        return
+    
     if channel in active_queues:
+        req._set_response()
+        req.wfile.write("A queue with this name already exists".encode('utf-8'))
         return
 
     # Create a new queueBot instance.
-    queueBot = QueueBot(channel)
+    queueBot = QueueBot(channel, name)
 
     # Get the queueBot message payload.
     message = queueBot.get_message_payload()
@@ -43,6 +56,9 @@ def start_queueBot(channel: str):
     queueBot.timestamp = timestamp
 
     active_queues[channel] = queueBot
+
+    req._set_response()
+    req.wfile.write("Succesfully created new Queue: {}".format(self.path).encode('utf-8'))
 
 def insert_queueBot(channel, user):
     if channel not in active_queues:

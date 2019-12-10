@@ -28,8 +28,9 @@ class QueueBot:
                     }
     }
 
-    def __init__(self, channel):
+    def __init__(self, channel, name):
         self.channel = channel
+        self.name = name
         self.username = "queueBot"
         self.icon_emoji = ":robot_face:"
         self.timestamp = ""
