@@ -23,6 +23,9 @@ except:
 active_queues = {}
 
 def start_queueBot(channel: str):
+    if channel in active_queues:
+        return
+
     # Create a new queueBot instance.
     queueBot = QueueBot(channel)
 
@@ -32,8 +35,12 @@ def start_queueBot(channel: str):
     # Post the queueBot message in Slack.
     response = web_client.chat_postMessage(**message)
 
+    timestamp = response["ts"]
+    # Pin Message
+    web_client.pins_add(channel=channel, timestamp=timestamp)
+
     # Save the timestamp so we use it as a reference to update the message.
-    queueBot.timestamp = response["ts"]
+    queueBot.timestamp = timestamp
 
     active_queues[channel] = queueBot
 
@@ -41,13 +48,13 @@ def insert_queueBot(channel, user):
     if channel not in active_queues:
         return
     
-    # Find the right active queue and insert new user
+    # Find the right active queue and insert new user.
     queue = active_queues[channel]
     queue.insert_queue(user)
 
-    # Get the updated queueBot message payload
+    # Get the updated queueBot message payload.
     message = queue.get_message_payload()
 
-    # Post the updated message in Slack
+    # Post the updated message in Slack.
     updated_message = web_client.chat_update(**message)
     
