@@ -32,13 +32,10 @@ class QueueBot:
         self.channel = channel
         self.username = "queueBot"
         self.icon_emoji = ":robot_face:"
-        self.timestamp = ""
         self.Q = deque()
-        self.web_client = {}
 
     def get_message_payload(self):
         return {
-            "ts": self.timestamp,
             "channel": self.channel,
             "username": self.username,
             "icon_emoji": self.icon_emoji,
