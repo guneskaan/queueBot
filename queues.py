@@ -23,14 +23,14 @@ except:
 active_queues = {}
 
 def start_queueBot(req, channel, text):
-    command_type, name = text.split("+")[::2]
+    command_type, name = text.partition("+")[::2]
 
     if command_type not in ['start', 'stop']:
         req._set_response()
         req.wfile.write("Invalid command parameters.".encode('utf-8'))
     elif command_type == 'stop':
         if channel in active_queues:
-            web_client.chat_delete(channel=channel, timestamp=maybe_channel.timestamp)
+            web_client.chat_delete(channel=channel, ts=active_queues[channel].timestamp)
             active_queues[channel] = None
         return
     
@@ -58,7 +58,7 @@ def start_queueBot(req, channel, text):
     active_queues[channel] = queueBot
 
     req._set_response()
-    req.wfile.write("Succesfully created new Queue: {}".format(self.path).encode('utf-8'))
+    req.wfile.write("Succesfully created new Queue: {}".format(name).encode('utf-8'))
 
 def insert_queueBot(channel, user):
     if channel not in active_queues:
