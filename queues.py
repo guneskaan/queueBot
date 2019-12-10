@@ -26,15 +26,15 @@ def start_queueBot(channel: str):
     # Create a new queueBot instance.
     queueBot = QueueBot(channel)
 
-    # Get the queueBot message payload
+    # Get the queueBot message payload.
     message = queueBot.get_message_payload()
 
-    # Post the queueBot message in Slack
+    # Post the queueBot message in Slack.
     response = web_client.chat_postMessage(**message)
 
-    # # Store the queueBot instance in active_queues
-    # if channel not in active_queues:
-    #     active_queues[channel] = {}
+    # Save the timestamp so we use it as a reference to update the message.
+    queueBot.timestamp = response["ts"]
+
     active_queues[channel] = queueBot
 
 def insert_queueBot(channel, user):

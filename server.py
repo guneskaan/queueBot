@@ -4,10 +4,10 @@ from urllib.parse import unquote
 import json
 from queues import start_queueBot, insert_queueBot
 
-# Change logger setting to display INFO type messages
+# Change logger setting to display INFO type messages.
 logging.getLogger().setLevel(logging.INFO)
 
-# Request Handler
+# Request Handler.
 class Handler(BaseHTTPRequestHandler):
     def _set_response(self):
         self.send_response(200)
@@ -20,34 +20,29 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
 
     def do_POST(self):
-        content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
-        post_data = self.rfile.read(content_length).decode('utf-8') # <--- Gets the data itself
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length).decode('utf-8')
         logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
             str(self.path), str(self.headers), post_data)
         
         if self.path == '/command':
-            self.do_command(self, post_data)
-            return
+            self.do_command(post_data)
 
-        try:
-            # TODO: This codepath should only run for Slack interactive payloads
+        # TODO: This codepath should only run for Slack interactive payloads.
+        elif self.path == '/':
             key, payload = post_data.partition("=")[::2]
-            payload_json = json.loads(unquote(payload)) # Replace escaped characters and parse JSON object
+            # Replace escaped characters and parse JSON object.
+            payload_json = json.loads(unquote(payload))
 
             insert_queueBot(payload_json["container"]["channel_id"], payload_json["user"])
-        except:
-            logging.info("Invalid POST request payload: %s\n", str(post_data))
-        finally:
-            self._set_response()
-            self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
+
+        self._set_response()
+        self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
     
     def do_command(self, post_data):
         pairs = post_data.split('&')
         pairsDict = dict(pair.split('=') for pair in pairs)
         start_queueBot(pairsDict["channel_id"])
-
-        self._set_response()
-        self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 
 def start_server(server_class=HTTPServer, handler_class=Handler, port=80):
     server_address = ('', port)

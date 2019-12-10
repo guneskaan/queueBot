@@ -4,7 +4,7 @@ import logging
 import slack
 from client_helpers import fetchImageUrlForUserId
 
-# Change logger setting to display INFO type messages
+# Change logger setting to display INFO type messages.
 logging.getLogger().setLevel(logging.INFO)
 
 class QueueBot:
@@ -32,10 +32,12 @@ class QueueBot:
         self.channel = channel
         self.username = "queueBot"
         self.icon_emoji = ":robot_face:"
+        self.timestamp = ""
         self.Q = deque()
 
     def get_message_payload(self):
         return {
+            "ts": self.timestamp,
             "channel": self.channel,
             "username": self.username,
             "icon_emoji": self.icon_emoji,
@@ -57,7 +59,7 @@ class QueueBot:
                 }
             }
 
-        #TODO: Think of a better way to show the start of the queue
+        #TODO: Think of a better way to show the start of the queue.
         elements.insert(0, {
                 "type": "mrkdwn",
                 "text": ":one: : "
@@ -69,7 +71,7 @@ class QueueBot:
         }
 
     def insert_queue(self, user):
-        # TODO: Send appropriate error message if user is already in the queue
+        # TODO: Send appropriate error message if user is already in the queue.
         if user in self.Q:
             logging.info('Error: User is already in the queue.')
             return
